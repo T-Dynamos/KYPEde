@@ -1,5 +1,7 @@
 <LauncherButton@AnchorLayout>
     icon:""
+    size_hint:None,None
+    size:dp(30),dp(50)
     MDIconButton:
         theme_icon_color:"Custom"
         icon_color:app.theme_cls.primary_dark
@@ -10,6 +12,8 @@
 <DesktopIcon>:
     icon:""
     run:print
+    size_hint:None,None
+    size:dp(30),dp(50)
     MDIconButton:
         theme_icon_color:"Custom"
         icon_color:app.theme_cls.primary_dark
@@ -24,10 +28,9 @@ MDRelativeLayout:
             id:main_icon_box
             adaptive_width:True
             size_hint:None,1
+            spacing:dp(20)
             LauncherButton:
                 icon:"ubuntu"
-            LauncherButton:
-                icon:""
     MDBoxLayout:
         size_hint:0.15,0.75
         md_bg_color:app.theme_cls.bg_darkest

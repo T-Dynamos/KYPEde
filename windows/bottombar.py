@@ -58,11 +58,15 @@ class BottomBar(MDApp):
         return Builder.load_file("./windows/bottombar.kv")
 
     def on_start(self):
-        loader = self.load_desktop_file("/usr/share/applications/blender.desktop")
-        widget = DesktopIcon()
-        widget.icon = loader[0]
-        widget.run = loader[-1]
-        self.root.ids.main_icon_box.add_widget(widget)
+        Clock.schedule_once(self.add_icons)
+
+    def add_icons(self,arg):
+        for file in ["gnome-system-monitor.desktop","simplescreenrecorder.desktop","xfce4-terminal.desktop","google-chrome.desktop","blender.desktop","com.obsproject.Studio.desktop","spotify.desktop","Zoom.desktop","discord.desktop"]:
+            loader = self.load_desktop_file(os.path.join("/usr/share/applications/"+file))
+            widget = DesktopIcon()
+            widget.icon = loader[0]
+            widget.run = loader[-1]
+            self.root.ids.main_icon_box.add_widget(widget)
 
     def write_file(self, filename, text):
         with open(filename, "w") as file:
@@ -110,8 +114,13 @@ class BottomBar(MDApp):
         raise OSError("Icon theme '{}' not found".format(theme))
 
     def locate_abs_icon(self, icon):
-        # try with current theme
         current_theme = self.get_current_icon_theme()
+
+        for icon_file in os.listdir("tmp/"):
+            if icon in icon_file and icon_file.split(".")[-2] == current_theme:
+                return ("tmp/"+icon_file,icon_file)
+
+        # try with current theme
         for folder in os.walk(self.locate_theme_icon_path(current_theme)):
             for file in folder[-1]:
                 if (
@@ -128,7 +137,7 @@ class BottomBar(MDApp):
         fallback_theme = None
         fallback_theme_ = self.locate_supported_icon_theme(icon)
         for _f in fallback_theme_:
-            if current_theme.split("-")[0] in _f:  # will detect dark icons
+            if current_theme.split("-")[0] in _f:  # will detect dark icon variant
                 fallback_theme = _f
         if fallback_theme is None:
             fallback_theme = fallback_theme_[0]  # cannot do anything here
@@ -172,10 +181,13 @@ class BottomBar(MDApp):
         return list(set(themes))
 
     def convert_svg(self, filename, theme_icon=None):
-        pngfile = "./tmp/{}-{}.png".format(filename.split("/")[-1][:-4], theme_icon)
+        pngfile = "./tmp/{}.{}.png".format(filename.split("/")[-1][:-4], theme_icon)
         if os.path.isfile(pngfile) == False:
-            cairosvg.svg2png(url=filename, write_to=pngfile)
-        return pngfile
+            cairosvg.svg2png(url=filename, write_to=pngfile) if filename.endswith(".svg") else print(filename)
+        if filename.endswith(".svg"):
+            return pngfile
+        else:
+            return filename
 
 
 while True:
