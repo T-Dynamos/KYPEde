@@ -1,0 +1,55 @@
+<LauncherButton@AnchorLayout>
+    icon:""
+    MDIconButton:
+        theme_icon_color:"Custom"
+        icon_color:app.theme_cls.primary_dark
+        on_release:app.open_bar()
+        icon:root.icon
+        icon_size:"40sp"
+
+<DesktopIcon>:
+    icon:""
+    run:print
+    MDIconButton:
+        theme_icon_color:"Custom"
+        icon_color:app.theme_cls.primary_dark
+        on_release:root.run()
+        icon:root.icon
+        icon_size:"40sp"
+
+MDRelativeLayout:
+    md_bg_color:app.theme_cls.bg_normal
+    AnchorLayout:
+        MDBoxLayout:
+            id:main_icon_box
+            adaptive_width:True
+            size_hint:None,1
+            LauncherButton:
+                icon:"ubuntu"
+            LauncherButton:
+                icon:""
+    MDBoxLayout:
+        size_hint:0.15,0.75
+        md_bg_color:app.theme_cls.bg_darkest
+        radius:dp(20)
+        pos_hint:{"center_x":0.92,"center_y":0.5}
+        MDIconButton:
+            icon:"volume-high"
+            size_hint:0.12,1
+            icon_size:"19dp"
+            on_release:app.open_sound()
+        MDIconButton:
+            icon:"brightness-5"
+            size_hint:0.12,1
+            icon_size:"18dp"
+        MDIconButton:
+            icon:"wifi-off"
+            size_hint:0.12,1
+            icon_size:"18dp"
+        MDLabel:
+            padding:(dp(10),0)
+            text:"11:24 PM"
+            size_hint:0.25,0.96
+            font_name:app.medium_font
+
+

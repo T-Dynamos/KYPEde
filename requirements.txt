@@ -1,0 +1,3 @@
+kivy
+kivymd==https://github.com/kivymd/KivyMD/archive/refs/heads/master.zip
+cairosvg
