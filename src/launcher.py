@@ -1,22 +1,9 @@
-import os
-from shutil import which
-
-if which("xrandr") is not None:
-    # get using xrandr command
-    xrandr_output = os.popen(which("xrandr")).read().split("\n")
-
-for line in xrandr_output:
-    if "*" in line:
-        current_resolution = [
-            int(line.split("x")[0].strip()),  # width
-            int(line.split("x")[-1].split(" ")[0]),  # height
-        ]
-
+from utils import current_resolution
 from kivy.config import Config
 
 Config.set("graphics", "borderless", "1")
-Config.set("graphics", "height", round(current_resolution[-1] / 5))
-Config.set("graphics", "width", round(current_resolution[0] // 6))
+Config.set("graphics", "height", round(current_resolution[-1] / 1.8))
+Config.set("graphics", "width", round(current_resolution[0] // 2.5))
 
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -32,18 +19,17 @@ class MainLauncher(MDApp):
 
     screen_height = current_resolution[-1]
     screen_width = current_resolution[0]
-    upscale = 1.39
-    center_value = 1.289
+    upscale = 2.75
+    center_value = 3.3
     launcher_open = False
 
     def build(self):
         Window.top = self.screen_height
-        Window.left = round(self.screen_width / self.center_value)
-        return Builder.load_file("./windows/sound.kv")
+        return Builder.load_file("./src/views/launcher.kv")
 
     def handler(self):
         while True:
-            with open("./windows/info_sound.file", "r") as file:
+            with open("./src/.info_launcher.file", "r") as file:
                 if file.read().split("\n")[0] == "open":
                     if self.launcher_open == False:
                         Clock.schedule_once(self.animate_open)
@@ -61,7 +47,7 @@ class MainLauncher(MDApp):
             file.close
 
     def on_start(self):
-        self.write_file("./windows/info_sound.file", "close")
+        self.write_file("./src/.info_launcher.file", "close")
         _thread.start_new_thread(self.handler, ())
 
     def animate_close(self, *args):

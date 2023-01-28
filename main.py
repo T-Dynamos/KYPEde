@@ -3,11 +3,11 @@ import time
 import os
 from shutil import which
 
-LAUNCHER_FILE = "./windows/launcher.py"
+LAUNCHER_FILE = "./src/launcher.py"
 UNIVERSAL_OPTIONS = ["add", "modal"]
-BOTTOMBAR_FILE = "./windows/bottombar.py"
+BOTTOMBAR_FILE = "./src/bottombar.py"
 BOTTOMBAR_OPTIONS = ["add", "above"]
-SOUND_FILE = "./windows/sound.py"
+SOUND_FILE = "./src/sound.py"
 
 bottombar = subprocess.Popen([which("python3"), BOTTOMBAR_FILE])
 launcher = subprocess.Popen([which("python3"), LAUNCHER_FILE])

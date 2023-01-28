@@ -1,21 +1,12 @@
-import os
-from shutil import which
+from utils import current_resolution,linux_home
+from config import MainConfig
 
-if which("xrandr") is not None:
-    # get using xrandr command
-    xrandr_output = os.popen(which("xrandr")).read().split("\n")
-
-for line in xrandr_output:
-    if "*" in line:
-        current_resolution = [
-            int(line.split("x")[0].strip()),  # width
-            int(line.split("x")[-1].split(" ")[0]),  # height
-        ]
+bar_height = int(MainConfig["bar_height"])
 
 from kivy.config import Config
 
 Config.set("graphics", "borderless", "1")
-Config.set("graphics", "height", round(current_resolution[-1] // 15))
+Config.set("graphics", "height", round(current_resolution[-1] // bar_height))
 Config.set("graphics", "width", round(current_resolution[0]))
 
 from kivy.lang import Builder
@@ -29,7 +20,7 @@ from kivymd.app import MDApp
 from kivy.uix.anchorlayout import AnchorLayout
 import _thread
 import cairosvg
-
+import os
 
 class DesktopIcon(AnchorLayout):
     pass
@@ -39,11 +30,11 @@ class BottomBar(MDApp):
 
     screen_height = current_resolution[-1]
     screen_width = current_resolution[0]
-    upscale = 6.3
+    bar_height = 15
     launcher_open = False
     sound_open = False
     Window = Window
-    user_home = "/home/" + os.popen("whoami").read()[:-1]
+    user_home = linux_home
     bold_font = "./fonts/Poppins-Bold.ttf"
     regular_font = "./fonts/Poppins-Regular.ttf"
     medium_font = "./fonts/Poppins-Medium.ttf"
@@ -51,11 +42,11 @@ class BottomBar(MDApp):
     icon_folders = ["/usr/share/icons/", f"{user_home}/.local/share/icons"]
 
     def build(self):
-        Window.top = self.screen_height - (self.screen_height // 15)
+        Window.top = self.screen_height - (self.screen_height // self.bar_height)
         self.title = "BottomBar"
         Clock.schedule_once(lambda arg: Window.show(), 0.2)
         self.theme_cls.theme_style = "Light"
-        return Builder.load_file("./windows/bottombar.kv")
+        return Builder.load_file("./src/views/bottombar.kv")
 
     def on_start(self):
         Clock.schedule_once(self.add_icons)
@@ -75,18 +66,18 @@ class BottomBar(MDApp):
 
     def open_bar(self):
         if self.launcher_open:
-            self.write_file("./windows/info_launcher.file", "close")
+            self.write_file("./src/.info_launcher.file", "close")
             self.launcher_open = False
         else:
-            self.write_file("./windows/info_launcher.file", "open")
+            self.write_file("./src/.info_launcher.file", "open")
             self.launcher_open = True
 
     def open_sound(self):
         if self.launcher_open:
-            self.write_file("./windows/info_sound.file", "close")
+            self.write_file("./src/.info_sound.file", "close")
             self.launcher_open = False
         else:
-            self.write_file("./windows/info_sound.file", "open")
+            self.write_file("./src/.info_sound.file", "open")
             self.launcher_open = True
 
     def get_current_icon_theme(self):
