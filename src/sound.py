@@ -15,6 +15,7 @@ import sys
 import time
 import os
 
+
 class MainLauncher(MDApp):
 
     screen_height = current_resolution[-1]
@@ -45,7 +46,7 @@ class MainLauncher(MDApp):
                         Clock.schedule_once(self.animate_close)
                         self.launcher_open = False
                 file.close()
-            time.sleep(0.1) # important delay
+            time.sleep(0.1)  # important delay
 
     def write_file(self, filename, text):
         with open(filename, "w") as file:

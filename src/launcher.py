@@ -15,6 +15,7 @@ import sys
 import time
 from custom_widgets.m3_textfield import M_CardTextField
 
+
 class MainLauncher(MDApp):
 
     screen_height = current_resolution[-1]

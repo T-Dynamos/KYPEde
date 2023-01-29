@@ -40,10 +40,16 @@ try:
 except Exception:
     pass
 
-json.dump({"bottombar":bottom_bar_windowid,"launcher":launcher_bar_windowid,"sound":sound_bar_windowid},open("dynamic_view.json","w"))
+json.dump(
+    {
+        "bottombar": bottom_bar_windowid,
+        "launcher": launcher_bar_windowid,
+        "sound": sound_bar_windowid,
+    },
+    open("dynamic_view.json", "w"),
+)
 
 kill_pid = lambda pid: os.system("kill {}".format(pid))
-
 
 
 while True:

@@ -16,7 +16,7 @@ from kivy.properties import (
     ObjectProperty,
     OptionProperty,
     VariableListProperty,
-    ColorProperty
+    ColorProperty,
 )
 from kivy.core.text import DEFAULT_FONT
 from kivy.config import Config
@@ -24,7 +24,7 @@ from kivy.event import EventDispatcher
 
 _is_desktop = False
 if Config:
-    _is_desktop = Config.getboolean('kivy', 'desktop')
+    _is_desktop = Config.getboolean("kivy", "desktop")
 
 Builder.load_string(
     """
@@ -228,7 +228,7 @@ class M_CardTextField(MDBoxLayout, ThemableBehavior):
 
     foreground_color = ListProperty([0, 0, 0, 0.8])
 
-    disabled_foreground_color = ColorProperty([0, 0, 0, .5])
+    disabled_foreground_color = ColorProperty([0, 0, 0, 0.5])
 
     input_filter = ObjectProperty(None, allownone=True)
 
@@ -243,30 +243,30 @@ class M_CardTextField(MDBoxLayout, ThemableBehavior):
     auto_indent = BooleanProperty(False)
 
     handle_image_middle = StringProperty(
-        'atlas://data/images/defaulttheme/selector_middle')
+        "atlas://data/images/defaulttheme/selector_middle"
+    )
 
-    handle_image_left = StringProperty(
-        'atlas://data/images/defaulttheme/selector_left')
+    handle_image_left = StringProperty("atlas://data/images/defaulttheme/selector_left")
 
     handle_image_right = StringProperty(
-        'atlas://data/images/defaulttheme/selector_right')
+        "atlas://data/images/defaulttheme/selector_right"
+    )
 
     write_tab = BooleanProperty(True)
 
-    base_direction = OptionProperty(None,
-                                    options=['ltr', 'rtl',
-                                             'weak_rtl', 'weak_ltr', None],
-                                    allownone=True)
+    base_direction = OptionProperty(
+        None, options=["ltr", "rtl", "weak_rtl", "weak_ltr", None], allownone=True
+    )
 
     font_family = StringProperty(None, allownone=True)
 
     font_context = StringProperty(None, allownone=True)
 
-    font_size = NumericProperty('15sp')
+    font_size = NumericProperty("15sp")
 
     font_name = StringProperty(DEFAULT_FONT)
 
-    selection_text = StringProperty(u'')
+    selection_text = StringProperty("")
 
     readonly = BooleanProperty(False)
 
@@ -274,13 +274,13 @@ class M_CardTextField(MDBoxLayout, ThemableBehavior):
 
     password = BooleanProperty(False)
 
-    password_mask = StringProperty('*')
+    password_mask = StringProperty("*")
 
     keyboard_suggestions = BooleanProperty(True)
 
     cursor_blink = BooleanProperty(True)
 
-    cursor_width = NumericProperty('1sp')
+    cursor_width = NumericProperty("1sp")
 
     line_height = NumericProperty(1)
 
@@ -288,14 +288,13 @@ class M_CardTextField(MDBoxLayout, ThemableBehavior):
 
     text_field_padding = VariableListProperty([6, 6, 6, 6])
 
-    halign = OptionProperty('auto', options=['left', 'center', 'right',
-                                             'auto'])
+    halign = OptionProperty("auto", options=["left", "center", "right", "auto"])
 
     scroll_x = NumericProperty(0)
 
     scroll_y = NumericProperty(0)
 
-    selection_color = ColorProperty([0.1843, 0.6549, 0.8313, .5])
+    selection_color = ColorProperty([0.1843, 0.6549, 0.8313, 0.5])
 
     border = ListProperty([4, 4, 4, 4])
 
@@ -303,15 +302,19 @@ class M_CardTextField(MDBoxLayout, ThemableBehavior):
 
     use_handles = BooleanProperty(not _is_desktop)
 
-    suggestion_text = StringProperty('')
+    suggestion_text = StringProperty("")
 
     icon_left = StringProperty("")
 
     icon_right = StringProperty("")
 
     def __init__(self, **kwargs):
-        self.icon_right_widget = MDIconButton(theme_text_color="Custom", text_color=[0, 0, 0, 1])
-        self.icon_left_widget = MDIconButton(theme_text_color="Custom", text_color=[0, 0, 0, 1])
+        self.icon_right_widget = MDIconButton(
+            theme_text_color="Custom", text_color=[0, 0, 0, 1]
+        )
+        self.icon_left_widget = MDIconButton(
+            theme_text_color="Custom", text_color=[0, 0, 0, 1]
+        )
         super().__init__(**kwargs)
         self.register_event_type("on_text")
         self.register_event_type("on_triple_tap")
@@ -330,19 +333,27 @@ class M_CardTextField(MDBoxLayout, ThemableBehavior):
             self.multiline = True
         if self.icon_left:
             self.icon_left_widget = MDIconButton(
-                icon=self.icon_left, on_release=self.icon_left_callback,
+                icon=self.icon_left,
+                on_release=self.icon_left_callback,
                 md_bg_color=self.icon_left_background_color,
-                theme_text_color="Custom", text_color=self.icon_left_color,
-                font_name=self.icon_left_font_name, font_size=self.icon_left_font_size)
+                theme_text_color="Custom",
+                text_color=self.icon_left_color,
+                font_name=self.icon_left_font_name,
+                font_size=self.icon_left_font_size,
+            )
             self.add_widget(self.icon_left_widget, index=1)
             self.multiline = False
 
         if self.icon_right:
             self.icon_right_widget = MDIconButton(
-                icon=self.icon_right, on_release=self.icon_right_callback,
+                icon=self.icon_right,
+                on_release=self.icon_right_callback,
                 md_bg_color=self.icon_right_background_color,
-                theme_text_color="Custom", text_color=self.icon_right_color,
-                font_name=self.icon_right_font_name, font_size=self.icon_right_font_size)
+                theme_text_color="Custom",
+                text_color=self.icon_right_color,
+                font_name=self.icon_right_font_name,
+                font_size=self.icon_right_font_size,
+            )
             self.add_widget(self.icon_right_widget)
             # self.multiline = False
 
@@ -480,29 +491,47 @@ if __name__ == "__main__":
     from kivymd.app import MDApp
     from kivy.uix.scrollview import ScrollView
 
-
     class Opera(MDApp):
         use_kivy_settings = False
 
         # kv_file = "main.kv"
 
         def build(self):
-            root = MDBoxLayout(orientation='vertical', padding=dp(
-                20), md_bg_color=[0, 0, 0, .15], spacing=dp(20))
+            root = MDBoxLayout(
+                orientation="vertical",
+                padding=dp(20),
+                md_bg_color=[0, 0, 0, 0.15],
+                spacing=dp(20),
+            )
             scroll = ScrollView()
-            field = M_CardTextField(hint_text="text field with icon & can't grow", grow_card=False, multiline=False,
-                                    md_bg_color=[1, 1, 1, 1], icon_right="magnify", icon_left="login",
-                                    icon_left_callback=self.login, icon_right_callback=self.search
-                                    )
+            field = M_CardTextField(
+                hint_text="text field with icon & can't grow",
+                grow_card=False,
+                multiline=False,
+                md_bg_color=[1, 1, 1, 1],
+                icon_right="magnify",
+                icon_left="login",
+                icon_left_callback=self.login,
+                icon_right_callback=self.search,
+            )
             field2 = M_CardTextField(
-                hint_text="text field with no icon & can grow", grow_card=True, elevation=0)
+                hint_text="text field with no icon & can grow",
+                grow_card=True,
+                elevation=0,
+            )
 
-            field3 = M_CardTextField(hint_text="text field with right icon & can't grow", grow_card=False,
-                                     icon_right="android",
-                                     icon_right_color=[0, 1, 0, 1])
-            field4 = M_CardTextField(hint_text="text field with left icon & can't grow", grow_card=False,
-                                     icon_left="home",
-                                     icon_left_color=[0, 0, 1, 1])
+            field3 = M_CardTextField(
+                hint_text="text field with right icon & can't grow",
+                grow_card=False,
+                icon_right="android",
+                icon_right_color=[0, 1, 0, 1],
+            )
+            field4 = M_CardTextField(
+                hint_text="text field with left icon & can't grow",
+                grow_card=False,
+                icon_left="home",
+                icon_left_color=[0, 0, 1, 1],
+            )
             root.add_widget(field)
             root.add_widget(field2)
             root.add_widget(field3)
@@ -515,6 +544,5 @@ if __name__ == "__main__":
 
         def login(self, instance):
             print("login", instance)
-
 
     Opera().run()

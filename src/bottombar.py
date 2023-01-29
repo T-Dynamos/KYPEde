@@ -1,4 +1,4 @@
-from utils import current_resolution,linux_home
+from utils import current_resolution, linux_home
 from config import MainConfig
 
 bar_height = int(MainConfig["bar_height"])
@@ -22,13 +22,13 @@ import _thread
 import cairosvg
 import os
 
-class DesktopIcon(AnchorLayout,HoverBehavior):
-    
+
+class DesktopIcon(AnchorLayout, HoverBehavior):
     def on_enter(self):
-        Animation(icon_size=dp(50),d=0.3).start(self.children[0])
-    
+        Animation(icon_size=dp(50), d=0.3).start(self.children[0])
+
     def on_leave(self):
-        Animation(icon_size=dp(40),d=0.3).start(self.children[0])
+        Animation(icon_size=dp(40), d=0.3).start(self.children[0])
 
 
 class BottomBar(MDApp):
@@ -46,7 +46,7 @@ class BottomBar(MDApp):
     light_font = "./fonts/Poppins-Light.ttf"
     icon_folders = ["/usr/share/icons/", f"{user_home}/.local/share/icons"]
     add_options = lambda options, window_id: os.system(
-    "{} -b {} -i -r {}".format(which("wmctrl"), ",".join(options), window_id)
+        "{} -b {} -i -r {}".format(which("wmctrl"), ",".join(options), window_id)
     )
 
     def build(self):
@@ -59,9 +59,21 @@ class BottomBar(MDApp):
     def on_start(self):
         Clock.schedule_once(self.add_icons)
 
-    def add_icons(self,arg):
-        for file in ["gnome-system-monitor.desktop","simplescreenrecorder.desktop","xfce4-terminal.desktop","google-chrome.desktop","blender.desktop","com.obsproject.Studio.desktop","spotify.desktop","Zoom.desktop","discord.desktop"]:
-            loader = self.load_desktop_file(os.path.join("/usr/share/applications/"+file))
+    def add_icons(self, arg):
+        for file in [
+            "gnome-system-monitor.desktop",
+            "simplescreenrecorder.desktop",
+            "xfce4-terminal.desktop",
+            "google-chrome.desktop",
+            "blender.desktop",
+            "com.obsproject.Studio.desktop",
+            "spotify.desktop",
+            "Zoom.desktop",
+            "discord.desktop",
+        ]:
+            loader = self.load_desktop_file(
+                os.path.join("/usr/share/applications/" + file)
+            )
             widget = DesktopIcon()
             widget.icon = loader[0]
             widget.run = loader[-1]
@@ -117,7 +129,7 @@ class BottomBar(MDApp):
 
         for icon_file in os.listdir("tmp/"):
             if icon in icon_file and icon_file.split(".")[-2] == current_theme:
-                return ("tmp/"+icon_file,icon_file)
+                return ("tmp/" + icon_file, icon_file)
 
         # try with current theme
         for folder in os.walk(self.locate_theme_icon_path(current_theme)):
@@ -182,7 +194,9 @@ class BottomBar(MDApp):
     def convert_svg(self, filename, theme_icon=None):
         pngfile = "./tmp/{}.{}.png".format(filename.split("/")[-1][:-4], theme_icon)
         if os.path.isfile(pngfile) == False:
-            cairosvg.svg2png(url=filename, write_to=pngfile) if filename.endswith(".svg") else print(filename)
+            cairosvg.svg2png(url=filename, write_to=pngfile) if filename.endswith(
+                ".svg"
+            ) else print(filename)
         if filename.endswith(".svg"):
             return pngfile
         else:
