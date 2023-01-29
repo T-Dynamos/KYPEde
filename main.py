@@ -2,6 +2,7 @@ import subprocess
 import time
 import os
 from shutil import which
+import json
 
 LAUNCHER_FILE = "./src/launcher.py"
 UNIVERSAL_OPTIONS = ["add", "modal"]
@@ -38,11 +39,16 @@ try:
     add_options(BOTTOMBAR_OPTIONS, bottom_bar_windowid)
 except Exception:
     pass
+
+json.dump({"bottombar":bottom_bar_windowid,"launcher":launcher_bar_windowid,"sound":sound_bar_windowid},open("dynamic_view.json","w"))
+
 kill_pid = lambda pid: os.system("kill {}".format(pid))
+
+
 
 while True:
     try:
-        time.sleep(1)
+        time.sleep(0.1)
     except Exception:
         kill_pid(bottombar.pid)
         kill_pid(launcher.pid)

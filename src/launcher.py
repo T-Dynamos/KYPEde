@@ -13,7 +13,7 @@ from kivy.animation import Animation
 import _thread
 import sys
 import time
-
+from custom_widgets.m3_textfield import M_CardTextField
 
 class MainLauncher(MDApp):
 
@@ -22,9 +22,14 @@ class MainLauncher(MDApp):
     upscale = 2.75
     center_value = 3.3
     launcher_open = False
+    bold_font = "./fonts/Poppins-Bold.ttf"
+    regular_font = "./fonts/Poppins-Regular.ttf"
+    medium_font = "./fonts/Poppins-Medium.ttf"
+    light_font = "./fonts/Poppins-Light.ttf"
 
     def build(self):
         Window.top = self.screen_height
+        self.theme_cls.theme_style = "Dark"
         return Builder.load_file("./src/views/launcher.kv")
 
     def handler(self):
@@ -44,7 +49,7 @@ class MainLauncher(MDApp):
     def write_file(self, filename, text):
         with open(filename, "w") as file:
             file.write(text)
-            file.close
+            file.close()
 
     def on_start(self):
         self.write_file("./src/.info_launcher.file", "close")
@@ -53,7 +58,7 @@ class MainLauncher(MDApp):
     def animate_close(self, *args):
         Window.left = round(self.screen_width / self.center_value)
         Animation(top=round(self.screen_width), d=0.4, t="in_out_quart").start(Window)
-        Clock.schedule_once(lambda arg: Window.hide(), 0.5)
+        Clock.schedule_once(lambda arg: Window.hide(), 0.41)
 
     def animate_open(self, *args):
         Window.left = round(self.screen_width / self.center_value)
@@ -63,5 +68,4 @@ class MainLauncher(MDApp):
         ).start(Window)
 
 
-while True:
-    MainLauncher().run()
+MainLauncher().run()

@@ -1,3 +1,14 @@
-MDLabel:
-    text:"A Simple Launcher! What else?"
-    halign:"center"
+
+
+MDRelativeLayout:
+    md_bg_color:app.theme_cls.bg_normal
+    M_CardTextField:
+        size_hint:0.8,0.13
+        pos_hint:{"center_x":0.5,"center_y":0.85}
+        md_bg_color:app.theme_cls.bg_light
+        background_color:self.md_bg_color
+        icon_left:"magnify"
+        hint_text:"Search between your apps"
+        font_name:app.medium_font
+        icon_left_color:app.theme_cls.opposite_bg_light
+        foreground_color:self.icon_left_color

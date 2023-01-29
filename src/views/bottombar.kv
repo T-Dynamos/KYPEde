@@ -19,22 +19,24 @@
         icon_color:app.theme_cls.primary_dark
         on_release:root.run()
         icon:root.icon
-        icon_size:"40sp"
+        icon_size:dp(40)
 
 MDRelativeLayout:
     md_bg_color:app.theme_cls.bg_normal
+    LauncherButton:
+        pos_hint:{"center_x":0.02,"center_y":0.5}
+        icon:"ubuntu"
+
     AnchorLayout:
         MDBoxLayout:
             id:main_icon_box
             adaptive_width:True
             size_hint:None,1
             spacing:dp(20)
-            LauncherButton:
-                icon:"ubuntu"
     MDBoxLayout:
         size_hint:0.15,0.75
-        md_bg_color:app.theme_cls.bg_darkest
-        radius:dp(20)
+        md_bg_color:app.theme_cls.bg_light
+        radius:[dp(2),dp(20),dp(20),dp(2)]
         pos_hint:{"center_x":0.92,"center_y":0.5}
         MDIconButton:
             icon:"volume-high"
@@ -54,5 +56,12 @@ MDRelativeLayout:
             text:"11:24 PM"
             size_hint:0.25,0.96
             font_name:app.medium_font
-
-
+    MDBoxLayout:
+        size_hint:0.05,0.75
+        md_bg_color:app.theme_cls.bg_light
+        radius:[dp(20),dp(2),dp(2),dp(20)]
+        pos_hint:{"center_x":0.815,"center_y":0.5}
+        MDLabel:
+            text:"Aug 9"
+            font_name:app.medium_font
+            halign:"center"

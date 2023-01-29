@@ -15,15 +15,20 @@ from kivy.clock import Clock
 from kivy.graphics.svg import Svg
 from kivy.animation import Animation
 from kivy.metrics import dp, sp
-from kivy.uix.anchorlayout import AnchorLayout
+from kivymd.uix.behaviors import HoverBehavior
 from kivymd.app import MDApp
 from kivy.uix.anchorlayout import AnchorLayout
 import _thread
 import cairosvg
 import os
 
-class DesktopIcon(AnchorLayout):
-    pass
+class DesktopIcon(AnchorLayout,HoverBehavior):
+    
+    def on_enter(self):
+        Animation(icon_size=dp(50),d=0.3).start(self.children[0])
+    
+    def on_leave(self):
+        Animation(icon_size=dp(40),d=0.3).start(self.children[0])
 
 
 class BottomBar(MDApp):
@@ -40,12 +45,15 @@ class BottomBar(MDApp):
     medium_font = "./fonts/Poppins-Medium.ttf"
     light_font = "./fonts/Poppins-Light.ttf"
     icon_folders = ["/usr/share/icons/", f"{user_home}/.local/share/icons"]
+    add_options = lambda options, window_id: os.system(
+    "{} -b {} -i -r {}".format(which("wmctrl"), ",".join(options), window_id)
+    )
 
     def build(self):
         Window.top = self.screen_height - (self.screen_height // self.bar_height)
         self.title = "BottomBar"
+        self.theme_cls.theme_style = "Dark"
         Clock.schedule_once(lambda arg: Window.show(), 0.2)
-        self.theme_cls.theme_style = "Light"
         return Builder.load_file("./src/views/bottombar.kv")
 
     def on_start(self):
@@ -181,5 +189,4 @@ class BottomBar(MDApp):
             return filename
 
 
-while True:
-    BottomBar().run()
+BottomBar().run()

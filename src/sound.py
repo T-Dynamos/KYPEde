@@ -13,7 +13,7 @@ from kivy.animation import Animation
 import _thread
 import sys
 import time
-
+import os
 
 class MainLauncher(MDApp):
 
@@ -22,10 +22,15 @@ class MainLauncher(MDApp):
     upscale = 1.39
     center_value = 1.289
     launcher_open = False
+    bold_font = "./fonts/Poppins-Bold.ttf"
+    regular_font = "./fonts/Poppins-Regular.ttf"
+    medium_font = "./fonts/Poppins-Medium.ttf"
+    light_font = "./fonts/Poppins-Light.ttf"
 
     def build(self):
         Window.top = self.screen_height
         Window.left = round(self.screen_width / self.center_value)
+        self.theme_cls.theme_style = "Dark"
         return Builder.load_file("./src/views/sound.kv")
 
     def handler(self):
@@ -64,5 +69,4 @@ class MainLauncher(MDApp):
         ).start(Window)
 
 
-while True:
-    MainLauncher().run()
+MainLauncher().run()

@@ -1,3 +1,55 @@
-MDLabel:
-    text:"A Simple Launcher! What else?"
-    halign:"center"
+
+RelativeLayout:
+    RelativeLayout:
+        size_hint:0.8,0.2
+        md_bg_color:app.theme_cls.bg_normal
+        radius:[dp(15)] * 4
+        pos_hint:{"center_x":0.5,"center_y":0.8}
+        MDBoxLayout:
+            md_bg_color:app.theme_cls.bg_normal
+            radius:[dp(20),0,0,dp(20)]
+            pos_hint:{"left":1}
+            size_hint:0.5,1
+        MDLabel:
+            pos_hint:{"left":1}
+            text:"Backend"
+            markup:True
+            size_hint:0.5,1
+            halign:"center"
+            font_name:app.medium_font
+        MDBoxLayout:
+            md_bg_color:app.theme_cls.bg_light
+            pos_hint:{"right":1}
+            size_hint:0.5,1
+            radius:[0,dp(20),dp(20),0]
+        MDLabel:
+            pos_hint:{"right":1}
+            text:"Pulseaudio"
+            size_hint:0.5,1
+            md_bg_color:0,0,0,0
+            line_color:app.theme_cls.bg_normal
+            font_name:app.regular_font
+            radius:[0,dp(15),dp(15),0]
+            halign:"center"
+    MDAnchorLayout:
+        size_hint:0.8,0.23
+        pos_hint:{"center_x":0.5,"center_y":0.5}
+        md_bg_color:app.theme_cls.bg_dark
+        radius:[dp(20)] * 4
+        MDSlider:
+            hint:False
+            track_color_active:app.theme_cls.bg_darkest
+            thumb_color:app.theme_cls.primary_light
+            _is_off:True
+        
+    MDAnchorLayout:
+        size_hint:0.8,0.23
+        pos_hint:{"center_x":0.5,"center_y":0.22}
+        md_bg_color:app.theme_cls.bg_dark
+        radius:[dp(20)] * 4
+        MDSlider:
+            hint:False
+            track_color_active:app.theme_cls.bg_normal
+            thumb_color:app.theme_cls.primary_light
+            background_width:dp(60)
+
