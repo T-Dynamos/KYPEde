@@ -63,7 +63,6 @@ class BottomBar(MDApp):
         for file in [
             "gnome-system-monitor.desktop",
             "simplescreenrecorder.desktop",
-            "xfce4-terminal.desktop",
             "google-chrome.desktop",
             "blender.desktop",
             "com.obsproject.Studio.desktop",
@@ -76,13 +75,13 @@ class BottomBar(MDApp):
             )
             widget = DesktopIcon()
             widget.icon = loader[0]
-            widget.run = loader[-1]
+            widget.run = loader[2]
             self.root.ids.main_icon_box.add_widget(widget)
 
     def write_file(self, filename, text):
         with open(filename, "w") as file:
             file.write(text)
-            file.close
+            file.close()
 
     def open_bar(self):
         if self.launcher_open:
@@ -111,10 +110,12 @@ class BottomBar(MDApp):
                 if line.startswith("Icon"):
                     icon = line.split("=")[-1].strip()
                 elif line.startswith("Exec"):
-                    run = lambda: os.system(line.split("=")[-1].strip())
+                    run = line.split("=")[-1].strip()
+                elif line.startswith("Name"):
+                    name = line.split("=")[-1].strip()
             file.close()
         absolute_icon = self.locate_abs_icon(icon)
-        return (self.convert_svg(absolute_icon[0], theme_icon=absolute_icon[-1]), run)
+        return (self.convert_svg(absolute_icon[0], theme_icon=absolute_icon[-1]), run,name)
 
     def locate_theme_icon_path(self, theme):
         for folder in self.icon_folders:
@@ -126,11 +127,9 @@ class BottomBar(MDApp):
 
     def locate_abs_icon(self, icon):
         current_theme = self.get_current_icon_theme()
-
         for icon_file in os.listdir("tmp/"):
             if icon in icon_file and icon_file.split(".")[-2] == current_theme:
                 return ("tmp/" + icon_file, icon_file)
-
         # try with current theme
         for folder in os.walk(self.locate_theme_icon_path(current_theme)):
             for file in folder[-1]:
@@ -143,7 +142,6 @@ class BottomBar(MDApp):
                     )
                 ):
                     return (os.path.join(folder[0], file), current_theme)
-
         # fallback
         fallback_theme = None
         fallback_theme_ = self.locate_supported_icon_theme(icon)
@@ -152,7 +150,6 @@ class BottomBar(MDApp):
                 fallback_theme = _f
         if fallback_theme is None:
             fallback_theme = fallback_theme_[0]  # cannot do anything here
-
         for fallback_folder in os.walk(fallback_theme):
             for file_fallback in fallback_folder[-1]:
                 if (
@@ -202,5 +199,38 @@ class BottomBar(MDApp):
         else:
             return filename
 
+    def get_all_desktop_files(self):
+        return [os.path.join("/usr/share/applications",file) for file in os.listdir("/usr/share/applications")]
 
-BottomBar().run()
+    def get_active_window_id(self):
+        command = os.popen("xprop -root").read()
+        for line in command.split("\n"):
+            if line.startswith("_NET_ACTIVE_WINDOW(WINDOW)"):
+                return line.split(" ")[-1].strip()
+
+    def get_window_details(self,window_id):
+        command = os.popen("xprop -id {}".format(window_id)).read()
+        window_name = None
+        pid = None
+        icon = None
+        for line in command.split("\n"):
+            if line.startswith("_NET_WM_VISIBLE_NAME"):
+                window_name = line.split("=")[-1].strip()[:-1][1:]
+            elif line.startswith("_NET_WM_PID(CARDINAL)"):
+                pid = line.split("=")[-1].strip()[:-1][1:]
+        for file in self.get_all_desktop_files():
+            file_info = self.load_desktop_file()
+            if file_info[-1] == window_name:
+                icon = file_info[0]
+        return {"window_name":window_name,"pid":pid,"icon":icon}
+
+    def get_all_window_ids(self):
+        command = os.popen("wmctrl -l").read()
+        ids = []
+        for line in command.split("\n"):
+            ids.append(line.split(" ")[0].strip())
+        return ids[:-1]
+
+
+app = BottomBar()
+print(app.get_window_details())
