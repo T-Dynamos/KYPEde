@@ -21,6 +21,7 @@ from kivy.uix.anchorlayout import AnchorLayout
 import _thread
 import cairosvg
 import os
+import sys
 
 
 class DesktopIcon(AnchorLayout, HoverBehavior):
@@ -104,14 +105,17 @@ class BottomBar(MDApp):
         return command.strip()
 
     def load_desktop_file(self, desktop_file):
+        icon = None
+        run = None
+        name = None
         with open(desktop_file, "r") as file:
             read_file = file.read()
             for line in read_file.split("\n"):
-                if line.startswith("Icon"):
+                if line.startswith("Icon=") and icon is  None:
                     icon = line.split("=")[-1].strip()
-                elif line.startswith("Exec"):
+                elif line.startswith("Exec=") and run is None:
                     run = line.split("=")[-1].strip()
-                elif line.startswith("Name"):
+                elif line.startswith("Name=") and name is  None:
                     name = line.split("=")[-1].strip()
             file.close()
         absolute_icon = self.locate_abs_icon(icon)
@@ -130,7 +134,7 @@ class BottomBar(MDApp):
         for icon_file in os.listdir("tmp/"):
             if icon in icon_file and icon_file.split(".")[-2] == current_theme:
                 return ("tmp/" + icon_file, icon_file)
-        # try with current theme
+
         for folder in os.walk(self.locate_theme_icon_path(current_theme)):
             for file in folder[-1]:
                 if (
@@ -141,8 +145,9 @@ class BottomBar(MDApp):
                         or "/".join(folder[0].split("/")).endswith("apps")
                     )
                 ):
+                    print("returning")
                     return (os.path.join(folder[0], file), current_theme)
-        # fallback
+
         fallback_theme = None
         fallback_theme_ = self.locate_supported_icon_theme(icon)
         for _f in fallback_theme_:
@@ -164,7 +169,7 @@ class BottomBar(MDApp):
                         os.path.join(fallback_folder[0], file_fallback),
                         fallback_theme.split("/")[-1],
                     )
-        return None  # icon does not exists on system!
+        return None
 
     def locate_supported_icon_theme(self, icon):
         supported_themes = []
@@ -208,20 +213,38 @@ class BottomBar(MDApp):
             if line.startswith("_NET_ACTIVE_WINDOW(WINDOW)"):
                 return line.split(" ")[-1].strip()
 
+    def match_window_name(self,name,window_name):
+        # function containing diff algorithms for apps
+        if any([
+                name.split(" ")[0].lower() in window_name.lower() and len(name.split(" ")[0].lower()) == len(window_name.lower()),
+                window_name[-13:] == "Google Chrome" and name == "Google Chrome",
+                window_name[-18:] == "VirtualBox Manager" and name == "Oracle VM VirtualBox",
+                name.lower() == window_name.lower(),
+                window_name.split(" ")[0].lower() in name.lower() # Telegram
+            ]):
+            return True
+        return False
+
     def get_window_details(self,window_id):
         command = os.popen("xprop -id {}".format(window_id)).read()
         window_name = None
         pid = None
         icon = None
+        name = None
         for line in command.split("\n"):
             if line.startswith("_NET_WM_VISIBLE_NAME"):
                 window_name = line.split("=")[-1].strip()[:-1][1:]
             elif line.startswith("_NET_WM_PID(CARDINAL)"):
                 pid = line.split("=")[-1].strip()[:-1][1:]
         for file in self.get_all_desktop_files():
-            file_info = self.load_desktop_file()
-            if file_info[-1] == window_name:
-                icon = file_info[0]
+            with open(file,"r") as file_tmp:
+                for line in file_tmp:
+                    if line.startswith("Name="):
+                        name = line.split("=")[-1].strip()
+                        if self.match_window_name(name,window_name):
+                            print(file)
+                            icon = self.load_desktop_file(file)[0]
+                            break
         return {"window_name":window_name,"pid":pid,"icon":icon}
 
     def get_all_window_ids(self):
@@ -233,4 +256,5 @@ class BottomBar(MDApp):
 
 
 app = BottomBar()
-print(app.get_window_details())
+
+print(app.get_window_details(sys.argv[1]))
