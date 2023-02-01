@@ -7,7 +7,7 @@ import json
 LAUNCHER_FILE = "./src/launcher.py"
 UNIVERSAL_OPTIONS = ["add", "modal"]
 BOTTOMBAR_FILE = "./src/bottombar.py"
-BOTTOMBAR_OPTIONS = ["add", "above","sticky"]
+BOTTOMBAR_OPTIONS = ["add", "above", "sticky"]
 SOUND_FILE = "./src/sound.py"
 
 bottombar = subprocess.Popen([which("python3"), BOTTOMBAR_FILE])

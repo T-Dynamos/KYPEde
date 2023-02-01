@@ -17,7 +17,7 @@
     MDIconButton:
         theme_icon_color:"Custom"
         icon_color:app.theme_cls.primary_dark
-        on_release:print(root.run)
+        on_release:app.raise_window(root.window_id)
         icon:root.icon
         icon_size:dp(40)
 
