@@ -1,3 +1,5 @@
+> # Development stopped beacuse of lack of svg support in kivy
+
 # KYPEde (in development)
 A full high performance linux desktop environoment
 
